@@ -123,54 +123,31 @@ elif selected_section == "Tratamiento de outliers":
 
 # 4. MODELO DEMANDA/GENERACIÓN
 elif selected_section == "Modelo de demanda/generación":
-    import joblib
-    import matplotlib.pyplot as plt
-
-    # --- Títulos principales ---
-    st.markdown("<h1>Modelo Prophet Demanda</h1>", unsafe_allow_html=True)
-    st.markdown("<h2>Consideraciones</h2>", unsafe_allow_html=True)
+    st.markdown("<h1>Consideraciones</h1>", unsafe_allow_html=True)
     st.markdown("""
-    - El modelo Prophet fue entrenado para predecir la demanda eléctrica diaria.
-    - Se tomaron en cuenta los días festivos en la ingeniería de características, lo que ayuda a capturar patrones estacionales y efectos de días especiales sobre la demanda.
-    - El conjunto de entrenamiento fue del 80% de los datos históricos, y 20% para pruebas.
-    - Se realizó validación cruzada para verificar la capacidad predictiva y robustez del modelo.
-    - **¿Cómo funciona Prophet?** Es un algoritmo de series temporales desarrollado por Facebook, que descompone los datos en tendencias, estacionalidad y días festivos, permitiendo hacer pronósticos precisos y entendibles incluso con datos incompletos o ruido.
+    - Se empleó el modelo Prophet para predecir la demanda y generación eléctrica diaria en Colombia.
+    - Para la ingeniería de características, se incluyó el efecto de los días festivos, lo que facilita capturar variaciones no estacionales y posibles anomalías causadas por eventos especiales.
+    - El conjunto de entrenamiento consistió en el 80% de los datos históricos y el restante 20% se destinó a prueba y validación.
+    - Se aplicó validación cruzada manual para medir la robustez del modelo y evitar sobreajuste.
+    - Prophet funciona descomponiendo la serie temporal en tendencias, estacionalidades y eventos especiales, permitiendo así pronósticos precisos y interpretables para diferentes horizontes temporales.
     """)
 
-    # --- Modelo demanda y gráfico/resultados ---
-    st.markdown("<h3>Cargar modelo Prophet demanda (.joblib)</h3>", unsafe_allow_html=True)
-    demanda_model = st.file_uploader("Carga el modelo Prophet de demanda (.joblib)", type=["joblib"], key="demanda")
-    demanda_pred = None
-    if demanda_model is not None:
-        try:
-            model_demanda = joblib.load(demanda_model)
-            # Puedes adaptar estos ejemplos: df_pred debe ser tu DataFrame de predicción
-            # df_pred Demanda: columnas 'ds', 'yhat', 'yhat_lower', 'yhat_upper'
-            st.success("Modelo cargado correctamente.")
-            # Simula algunos datos de predicción para el ejemplo
-            import pandas as pd
-            pred_ejemplo = pd.DataFrame({
-                "ds": pd.date_range("2025-12-01", periods=30),
-                "yhat": [410 + i + (i%6)*20 for i in range(30)],
-                "yhat_lower": [400 + i for i in range(30)],
-                "yhat_upper": [430 + i for i in range(30)],
-            })
-            fig, ax = plt.subplots()
-            ax.plot(pred_ejemplo["ds"], pred_ejemplo["yhat"], label="Pronóstico demanda")
-            ax.fill_between(pred_ejemplo["ds"], pred_ejemplo["yhat_lower"], pred_ejemplo["yhat_upper"], alpha=0.3)
-            ax.set_xlabel("Fecha")
-            ax.set_ylabel("Demanda (GWh)")
-            ax.legend()
-            st.pyplot(fig)
-            # Simula gráfico de validación cruzada
-            st.markdown("<h3>Gráfica de validación cruzada</h3>", unsafe_allow_html=True)
-            fig2, ax2 = plt.subplots()
-            ax2.plot(pred_ejemplo["ds"], pred_ejemplo["yhat"], label="Predicción", color='green')
-            ax2.plot(pred_ejemplo["ds"], [415 for _ in range(30)], label="Real", color='black', linestyle='dashed')
-            ax2.legend()
-            st.pyplot(fig2)
-        except Exception as e:
-            st.error(f"Error al cargar o graficar modelo de demanda: {e}")
+    # Modelo demanda
+    st.markdown("<h2>Modelo demanda</h2>", unsafe_allow_html=True)
+    try:
+        st.image(os.path.join("Graficas","demanda.png"), caption='Demanda: Real vs Predicho (con Validación Cruzada)', use_column_width=True)
+    except Exception:
+        st.warning("No se pudo cargar la gráfica demanda.png. Verifica la ruta y existencia del archivo.")
+    st.markdown("R² global (manual, cross-validation): **0.2162**")
+
+    # Modelo generación
+    st.markdown("<h2>Modelo generación</h2>", unsafe_allow_html=True)
+    try:
+        st.image(os.path.join("Graficas","generacion.png"), caption='Generación: Real vs Predicho (con Validación Cruzada)', use_column_width=True)
+    except Exception:
+        st.warning("No se pudo cargar la gráfica generacion.png. Verifica la ruta y existencia del archivo.")
+    st.markdown("R² global (manual, cross-validation): **0.7655**")
+
 
     # --- Título principal modelo generación ---
     st.markdown("<h1>Modelo Prophet Generación</h1>", unsafe_allow_html=True)
