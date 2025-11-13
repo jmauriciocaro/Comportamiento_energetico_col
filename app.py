@@ -97,15 +97,14 @@ elif selected_section == "Tratamiento de outliers":
     st.markdown("<h1>Tratamiento de outliers</h1>", unsafe_allow_html=True)
     st.markdown("<h2>Investigaciones</h2>", unsafe_allow_html=True)
     st.markdown("""
-    No se evidenciaron eventos extraordinarios asociados a los outliers. 
-    Para su tratamiento, si la demanda diaria superaba 1.3 veces la media, el valor se reemplazó por la media. 
-    Esto puede atribuirse a errores humanos o acumulaciones anómalas en el registro de la demanda.
+    No se evidenciaron eventos extraordinarios asociados a los outliers.
+    Para su tratamiento, si la demanda diaria superaba 1.3 veces la media, el valor se reemplazó por la media.
+    Esto puede deberse a registrarse demanda acumulada de varios días o a errores de digitación.
     """)
 
-    # Cargar el archivo de outliers
     df_outliers = load_data("outliers_demanda_altos.csv")
 
-    # Detectar columna numérica relevante
+    # Detectar columna numérica
     valor_col = None
     for col in df_outliers.columns:
         if df_outliers[col].dtype in ['float64', 'int64']:
@@ -113,33 +112,13 @@ elif selected_section == "Tratamiento de outliers":
             break
 
     if not df_outliers.empty and valor_col:
-        mean = df_outliers[valor_col].mean()
-        threshold = mean * 1.3
-        df_outliers["outlier"] = df_outliers[valor_col] > threshold
-        df_outliers["valor_tratado"] = df_outliers[valor_col].where(~df_outliers["outlier"], mean)
+        st.markdown("<h3>Tabla de outlier demanda</h3>", unsafe_allow_html=True)
+        st.dataframe(df_outliers.head(10))
 
-        st.markdown("<h3>Tabla con tratamiento de outliers</h3>", unsafe_allow_html=True)
-        st.dataframe(df_outliers[[df_outliers.columns[0], valor_col, "valor_tratado", "outlier"]].head(10))
-
-        # Gráfica demanda original
-        st.markdown("<h3>Demanda original</h3>", unsafe_allow_html=True)
-        fig, ax = plt.subplots()
-        ax.plot(df_outliers[df_outliers.columns[0]], df_outliers[valor_col], label="Demanda original")
-        ax.set_xlabel("Fecha")
-        ax.set_ylabel("Demanda")
-        ax.legend()
-        st.pyplot(fig)
-
-        # Gráfica demanda tratada
-        st.markdown("<h3>Demanda tratada</h3>", unsafe_allow_html=True)
-        fig2, ax2 = plt.subplots()
-        ax2.plot(df_outliers[df_outliers.columns[0]], df_outliers["valor_tratado"], label="Demanda tratada", color="orange")
-        ax2.set_xlabel("Fecha")
-        ax2.set_ylabel("Demanda tratada")
-        ax2.legend()
-        st.pyplot(fig2)
+        st.markdown("<h3>Outlier demanda</h3>", unsafe_allow_html=True)
+        st.line_chart(df_outliers.set_index(df_outliers.columns[0])[valor_col])
     else:
-        st.warning("No se encontraron valores numéricos en el archivo de outliers.")
+        st.warning("No se encontró columna numérica para graficar en el archivo de outliers.")
 
 
 # 4. MODELO DEMANDA/GENERACIÓN
