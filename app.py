@@ -62,7 +62,26 @@ if selected_section == "Datos crudos":
 # 2. TRANSFORMACIONES
 elif selected_section == "Transformaciones":
     st.header("Transformaciones")
-    st.info("Aquí se mostrarán los pasos y ejemplos de transformación de los datos.")
+
+    st.markdown("""
+    En el notebook de modelos, los datos crudos pasan por las siguientes transformaciones:
+    - Se estandariza la columna de fechas al formato `datetime`.
+    - Se crea una columna `Valor` que representa el valor original.
+    - Se transforma el valor a GWh (por ejemplo, si los datos estaban en MWh, se divide entre 1000).
+    - Se selecciona solo la estructura final deseada: Fecha | Valor | Valor_GWh.
+
+    Ejemplo de estructura final de la tabla:
+    """)
+
+    # Ejemplo sintético de tabla transformada
+    import pandas as pd
+    ejemplo = pd.DataFrame({
+        "Fecha": pd.date_range("2025-01-01", periods=5, freq="D"),
+        "Valor": [89000, 102500, 95000, 87000, 120000],    # valores en MWh
+    })
+    ejemplo["Valor_GWh"] = ejemplo["Valor"] / 1000
+
+    st.dataframe(ejemplo)
 
 # 3. TRATAMIENTO DE OUTLIERS
 elif selected_section == "Tratamiento de outliers":
