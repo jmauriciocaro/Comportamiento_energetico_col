@@ -200,10 +200,10 @@ Fuentes
 
 
 # 6. COMPARACIÓN Y CONCLUSIONES
-t.markdown("<h1>Comparación generación vs demanda y conclusiones</h1>", unsafe_allow_html=True)
-    st.write("Abajo se muestra la comparación entre la generación y la demanda eléctrica de Colombia:")
+st.markdown("<h1>Comparación generación vs demanda y conclusiones</h1>", unsafe_allow_html=True)
+st.write("Abajo se muestra la comparación entre la generación y la demanda eléctrica de Colombia:")
     
-    try:
+	try:
         imagen = Image.open("comparacion.png")
         st.image(imagen, caption="Comparación generación vs demanda", use_column_width=True)
     except Exception:
