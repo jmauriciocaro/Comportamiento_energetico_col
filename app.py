@@ -94,8 +94,43 @@ elif selected_section == "Transformaciones":
 
 # 3. TRATAMIENTO DE OUTLIERS
 elif selected_section == "Tratamiento de outliers":
-    st.header("Tratamiento de outliers")
-    st.info("Aquí se mostrarán los métodos y resultados para tratar outliers.")
+    st.markdown("<h1>Tratamiento de outliers</h1>", unsafe_allow_html=True)
+
+    st.markdown("<h2>Investigaciones</h2>", unsafe_allow_html=True)
+    st.markdown("""
+    En la revisión de los outliers no se evidenciaron eventos extraordinarios relacionados con factores externos. 
+    El criterio de tratamiento aplicado fue:  
+    Si la demanda diaria superaba en más de 1.3 veces el valor medio histórico, se reemplazó ese dato por el promedio de la serie.  
+    Esto se justifica por posibles acumulaciones de demanda en el día, o errores humanos en la digitación de datos.
+    """)
+
+    # Cargar archivo de outliers
+    df_outliers = load_data("outliers_demanda_altos.csv")
+    # Detectar columna numérica para graficar
+    valor_col = None
+    for col in df_outliers.columns:
+        if df_outliers[col].dtype in ['float64', 'int64']:
+            valor_col = col
+            break
+
+    from numpy import nan
+    if not df_outliers.empty and valor_col:
+        mean = df_outliers[valor_col].mean()
+        threshold = mean * 1.3
+        # Nueva columna para marcar si es outlier
+        df_outliers["outlier"] = df_outliers[valor_col] > threshold
+        # Reemplazo de outliers por la media
+        df_outliers["valor_tratado"] = df_outliers[valor_col].where(~df_outliers["outlier"], mean)
+
+        st.markdown("<h3>Tabla con tratamiento de outliers</h3>", unsafe_allow_html=True)
+        st.dataframe(df_outliers[[df_outliers.columns[0], valor_col, "valor_tratado", "outlier"]].head(10))
+
+        st.markdown("<h3>Gráfica: demanda original vs tratada</h3>", unsafe_allow_html=True)
+        grafico = df_outliers[[df_outliers.columns[0], valor_col, "valor_tratado"]].set_index(df_outliers.columns[0]).head(50)
+        st.line_chart(grafico)
+    else:
+        st.warning("No se encontraron valores numéricos en el archivo de outliers.")
+
 
 # 4. MODELO DEMANDA/GENERACIÓN
 elif selected_section == "Modelo de demanda/generación":
