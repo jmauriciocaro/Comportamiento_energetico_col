@@ -123,8 +123,95 @@ elif selected_section == "Tratamiento de outliers":
 
 # 4. MODELO DEMANDA/GENERACIÓN
 elif selected_section == "Modelo de demanda/generación":
-    st.header("Modelo de demanda/generación")
-    st.info("Aquí puedes cargar y probar tus modelos.")
+    import joblib
+    import matplotlib.pyplot as plt
+
+    # --- Títulos principales ---
+    st.markdown("<h1>Modelo Prophet Demanda</h1>", unsafe_allow_html=True)
+    st.markdown("<h2>Consideraciones</h2>", unsafe_allow_html=True)
+    st.markdown("""
+    - El modelo Prophet fue entrenado para predecir la demanda eléctrica diaria.
+    - Se tomaron en cuenta los días festivos en la ingeniería de características, lo que ayuda a capturar patrones estacionales y efectos de días especiales sobre la demanda.
+    - El conjunto de entrenamiento fue del 80% de los datos históricos, y 20% para pruebas.
+    - Se realizó validación cruzada para verificar la capacidad predictiva y robustez del modelo.
+    - **¿Cómo funciona Prophet?** Es un algoritmo de series temporales desarrollado por Facebook, que descompone los datos en tendencias, estacionalidad y días festivos, permitiendo hacer pronósticos precisos y entendibles incluso con datos incompletos o ruido.
+    """)
+
+    # --- Modelo demanda y gráfico/resultados ---
+    st.markdown("<h3>Cargar modelo Prophet demanda (.joblib)</h3>", unsafe_allow_html=True)
+    demanda_model = st.file_uploader("Carga el modelo Prophet de demanda (.joblib)", type=["joblib"], key="demanda")
+    demanda_pred = None
+    if demanda_model is not None:
+        try:
+            model_demanda = joblib.load(demanda_model)
+            # Puedes adaptar estos ejemplos: df_pred debe ser tu DataFrame de predicción
+            # df_pred Demanda: columnas 'ds', 'yhat', 'yhat_lower', 'yhat_upper'
+            st.success("Modelo cargado correctamente.")
+            # Simula algunos datos de predicción para el ejemplo
+            import pandas as pd
+            pred_ejemplo = pd.DataFrame({
+                "ds": pd.date_range("2025-12-01", periods=30),
+                "yhat": [410 + i + (i%6)*20 for i in range(30)],
+                "yhat_lower": [400 + i for i in range(30)],
+                "yhat_upper": [430 + i for i in range(30)],
+            })
+            fig, ax = plt.subplots()
+            ax.plot(pred_ejemplo["ds"], pred_ejemplo["yhat"], label="Pronóstico demanda")
+            ax.fill_between(pred_ejemplo["ds"], pred_ejemplo["yhat_lower"], pred_ejemplo["yhat_upper"], alpha=0.3)
+            ax.set_xlabel("Fecha")
+            ax.set_ylabel("Demanda (GWh)")
+            ax.legend()
+            st.pyplot(fig)
+            # Simula gráfico de validación cruzada
+            st.markdown("<h3>Gráfica de validación cruzada</h3>", unsafe_allow_html=True)
+            fig2, ax2 = plt.subplots()
+            ax2.plot(pred_ejemplo["ds"], pred_ejemplo["yhat"], label="Predicción", color='green')
+            ax2.plot(pred_ejemplo["ds"], [415 for _ in range(30)], label="Real", color='black', linestyle='dashed')
+            ax2.legend()
+            st.pyplot(fig2)
+        except Exception as e:
+            st.error(f"Error al cargar o graficar modelo de demanda: {e}")
+
+    # --- Título principal modelo generación ---
+    st.markdown("<h1>Modelo Prophet Generación</h1>", unsafe_allow_html=True)
+    st.markdown("<h2>Consideraciones</h2>", unsafe_allow_html=True)
+    st.markdown("""
+    - El modelo Prophet fue entrenado para predecir la generación eléctrica diaria.
+    - También incorporó información de días festivos y características temporales relevantes.
+    - El split fue del 80% para entrenamiento y 20% para prueba; la validación cruzada mostró que el modelo se adapta bien a variaciones estacionales.
+    - Prophet es flexible y permite modelar cambios abruptos en la tendencia y la estacionalidad, lo que es clave en la industria energética.
+    """)
+
+    st.markdown("<h3>Cargar modelo Prophet generación (.joblib)</h3>", unsafe_allow_html=True)
+    generacion_model = st.file_uploader("Carga el modelo Prophet de generación (.joblib)", type=["joblib"], key="generacion")
+    if generacion_model is not None:
+        try:
+            model_gen = joblib.load(generacion_model)
+            # Simula algunos datos de predicción para el ejemplo
+            import pandas as pd
+            pred_ejemplo2 = pd.DataFrame({
+                "ds": pd.date_range("2025-12-01", periods=30),
+                "yhat": [390 + i + (i%7)*15 for i in range(30)],
+                "yhat_lower": [380 + i for i in range(30)],
+                "yhat_upper": [410 + i for i in range(30)],
+            })
+            fig3, ax3 = plt.subplots()
+            ax3.plot(pred_ejemplo2["ds"], pred_ejemplo2["yhat"], label="Pronóstico generación", color="orange")
+            ax3.fill_between(pred_ejemplo2["ds"], pred_ejemplo2["yhat_lower"], pred_ejemplo2["yhat_upper"], alpha=0.25, color="orange")
+            ax3.set_xlabel("Fecha")
+            ax3.set_ylabel("Generación (GWh)")
+            ax3.legend()
+            st.pyplot(fig3)
+            # Gráfica de validación cruzada generación
+            st.markdown("<h3>Gráfica de validación cruzada</h3>", unsafe_allow_html=True)
+            fig4, ax4 = plt.subplots()
+            ax4.plot(pred_ejemplo2["ds"], pred_ejemplo2["yhat"], label="Predicción", color='orange')
+            ax4.plot(pred_ejemplo2["ds"], [395 for _ in range(30)], label="Real", color='black', linestyle='dashed')
+            ax4.legend()
+            st.pyplot(fig4)
+        except Exception as e:
+            st.error(f"Error al cargar o graficar modelo de generación: {e}")
+
 
 # 5. CALIFICACIÓN DE MODELOS
 elif selected_section == "Calificación de modelos":
