@@ -206,7 +206,7 @@ elif selected_section == "Comparación y conclusiones":
     st.write("Abajo se muestra la comparación entre la generación y la demanda eléctrica de Colombia:")
 
     try:
-        imagen = Image.open("comparacion.png")
+        imagen = Image.open("demanda.png")
         st.image(imagen, caption="Comparación generación vs demanda", use_column_width=True)
     except Exception:
         st.warning("No se pudo cargar la gráfica comparacion.png. Verifica que esté en la raíz con app.py.")
