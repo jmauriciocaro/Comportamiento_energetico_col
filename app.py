@@ -205,12 +205,12 @@ elif selected_section == "Comparación y conclusiones":
     st.markdown("<h1>Comparación generación vs demanda y conclusiones</h1>", unsafe_allow_html=True)
     st.write("Abajo se muestra la comparación entre la generación y la demanda eléctrica de Colombia:")
 
+    
     try:
-        imagen = Image.open("demanda.png")
-        st.image(imagen, caption="Comparación generación vs demanda", use_column_width=True)
+        st.image("comparacion.png", caption='Demanda vs Generacion)', use_column_width=True)
     except Exception:
         st.warning("No se pudo cargar la gráfica comparacion.png. Verifica que esté en la raíz con app.py.")
-
+    
     st.markdown("""
 # Validación de conclusiones
 - Según la Unidad de Planeación Minero Energética (UPME), la demanda eléctrica en Colombia crecerá en promedio 2,38% anual hasta 2038, lo que pone en tensión la infraestructura existente y podría generar un déficit estructural de energía a partir de 2027 si no se realizan nuevas inversiones en generación.
