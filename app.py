@@ -254,7 +254,8 @@ elif selected_section == "Fuentes":
 - SER Colombia: Documento oficial sobre expansión de fuentes no convencionales de energía renovable (FNCER).
 - Invest in Colombia: Datos sobre adjudicación y crecimiento en proyectos renovables.
 - SEI (Stockholm Environment Institute): Estudios sobre energía solar, eólica y comunidades energéticas en Colombia.
-- Climatetracker Latinoamérica: Análisis de los desafíos y oportunidades de las renovables frente al desabastecimiento)"""
+- Climatetracker Latinoamérica: Análisis de los desafíos y oportunidades de las renovables frente al desabastecimiento"""
+			   )
 
 
 st.sidebar.markdown("---")
