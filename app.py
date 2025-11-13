@@ -4,28 +4,24 @@ import os
 import numpy as np
 
 DATA_PATH = "data"
-NOTEBOOK_PATH = "notebook"
 
-@st.cache_data
 def load_data(file_name):
-    file_path = os.path.join(DATA_PATH, file_name)
-    return pd.read_csv(file_path)
-
-# Añade aquí el nombre de tu tercer dataset si lo tienes.
-third_dataset = None
-try:
-    third_dataset = load_data("demanda.csv")
-except Exception:
-    third_dataset = None
+    try:
+        file_path = os.path.join(DATA_PATH, file_name)
+        df = pd.read_csv(file_path)
+        return df
+    except Exception as e:
+        st.error(f"No se pudo cargar el archivo {file_name}. Error: {e}")
+        return pd.DataFrame()
 
 tabs = st.tabs([
-    "Datos crudos",                # 1
-    "Transformaciones",            # 2
-    "Tratamiento de outliers",     # 3
-    "Modelo de demanda/generación",# 4
-    "Calificación de modelos",     # 5
-    "Comparación y conclusiones",  # 6
-    "Fuentes"                      # 7
+    "Datos crudos",                
+    "Transformaciones",            
+    "Tratamiento de outliers",     
+    "Modelo de demanda/generación",
+    "Calificación de modelos",     
+    "Comparación y conclusiones",  
+    "Fuentes"                      
 ])
 
 # 1. Datos crudos
@@ -34,98 +30,97 @@ with tabs[0]:
     df_crisis = load_data("fechas_riesgo_crisis_energetica.csv")
     df_outliers = load_data("outliers_demanda_altos.csv")
     st.subheader("Fechas riesgo crisis energética")
-    st.dataframe(df_crisis)
+    if not df_crisis.empty:
+        st.dataframe(df_crisis)
+    else:
+        st.warning("No hay datos de crisis energética.")
     st.subheader("Outliers demanda altos")
-    st.dataframe(df_outliers)
-    if third_dataset is not None:
-        st.subheader("Demanda")
-        st.dataframe(third_dataset)
+    if not df_outliers.empty:
+        st.dataframe(df_outliers)
+    else:
+        st.warning("No hay datos de outliers.")
 
 # 2. Transformaciones
 with tabs[1]:
     st.header("Transformaciones de datos")
     st.markdown("""
-    - Se realizó conversión de la columna de fechas al formato `datetime`.
-    - Los valores nulos fueron imputados usando interpolación lineal.
-    - Se agregaron columnas para análisis temporal: día, mes, año.
-    - Los valores de demanda fueron normalizados usando min-max scaling.
-    Ejemplo de estructura transformada:
+    - Conversión de la columna de fechas al formato `datetime`.
+    - Imputación de valores nulos utilizando interpolación lineal.
+    - Ejemplo de transformación:
     """)
-    if third_dataset is not None:
-        td = third_dataset.copy()
-        if "fecha" in td.columns:
-            td["fecha"] = pd.to_datetime(td["fecha"])
-            td["dia"] = td["fecha"].dt.day
-            td["mes"] = td["fecha"].dt.month
-            td["año"] = td["fecha"].dt.year
-        st.dataframe(td.head())
+    if not df_crisis.empty and 'fecha' in df_crisis.columns:
+        df_temp = df_crisis.copy()
+        df_temp['fecha'] = pd.to_datetime(df_temp['fecha'], errors='coerce')
+        st.dataframe(df_temp.head())
+    else:
+        st.warning("No se puede mostrar transformación: falta la columna 'fecha' en crisis energética.")
 
 # 3. Tratamiento de outliers
 with tabs[2]:
     st.header("Tratamiento de outliers")
     st.markdown("""
-    - Se identificaron valores atípicos mediante el método de desviación estándar (> 3σ).
-    - Para tratamiento, se dejaron sin remover pero se etiquetaron con una nueva columna 'outlier' = True.
-    - Los valores extremos pueden ser visualizados a continuación.
+    - Identificación de outliers mediante el método de puntaje z.
     """)
-    df_outliers['valor_zscore'] = (df_outliers['valor'] - df_outliers['valor'].mean()) / df_outliers['valor'].std()
-    df_outliers['outlier'] = np.abs(df_outliers['valor_zscore']) > 3
-    st.dataframe(df_outliers[df_outliers['outlier']])
+    if not df_outliers.empty:
+        # Verificamos si la columna 'valor' existe
+        valor_col = None
+        for col in df_outliers.columns:
+            col_lower = col.lower()
+            if col_lower in ['valor', 'demanda', 'value']:
+                valor_col = col
+                break
+        if valor_col:
+            mean = df_outliers[valor_col].mean()
+            std = df_outliers[valor_col].std()
+            df_outliers['zscore'] = (df_outliers[valor_col] - mean) / std
+            df_outliers['outlier'] = np.abs(df_outliers['zscore']) > 3
+            n_outliers = df_outliers['outlier'].sum()
+            st.success(f"Se identificaron {n_outliers} outliers con z > 3.")
+            st.dataframe(df_outliers[df_outliers['outlier']])
+        else:
+            st.error("No se encontró una columna numérica válida ('valor' o 'demanda') en outliers_demanda_altos.csv.")
+    else:
+        st.warning("No hay datos para análisis de outliers.")
 
 # 4. Modelo demanda/generación
 with tabs[3]:
     st.header("Modelo de demanda o generación")
     st.markdown("""
-    - Aquí puedes subir tu modelo entrenado en formato `.joblib` para realizar predicciones con los datos crudos o transformados.
-    - Ejemplo: modelo Prophet, RandomForest, etc.
+    - Aquí puedes cargar tu modelo en formato `.joblib` y realizar predicciones sobre los datos cargados.
     """)
     uploaded_model = st.file_uploader("Carga tu modelo .joblib", type=["joblib"])
-    if uploaded_model:
-        import joblib
-        model = joblib.load(uploaded_model)
-        st.write("Modelo cargado correctamente. Suba datos para predicción en las secciones previas.")
-        # Ejemplo básico de predicción:
-        # Si tu modelo espera una columna 'valor' en third_dataset
-        if third_dataset is not None:
-            try:
-                y_pred = model.predict(third_dataset[['valor']])
-                st.write("Predicciones del modelo (primeros 5):")
-                st.write(y_pred[:5])
-            except Exception as e:
-                st.write(f"No se pudo ejecutar predicción: {e}")
+    if uploaded_model and valor_col:
+        try:
+            import joblib
+            model = joblib.load(uploaded_model)
+            y_pred = model.predict(df_outliers[[valor_col]])
+            st.write("Predicciones del modelo (primeros 10 valores):")
+            st.write(y_pred[:10])
+        except Exception as e:
+            st.error(f"Error al ejecutar el modelo: {e}")
 
 # 5. Calificación de modelos
 with tabs[4]:
     st.header("Calificación de los modelos")
     st.markdown("""
-    - Se evaluó el desempeño con las métricas:
-        - MAE (Error absoluto medio)
-        - RMSE (Raíz del error cuadrático medio)
-        - MAPE (Error porcentual absoluto medio)
-        - sMAPE (Error porcentual absoluto medio simétrico)
-        - R² (Coeficiente de determinación)
-    - Ejemplo de comparación (cargar resultados) :
+    - MAE, RMSE, MAPE, sMAPE, R², etc.  
+    - Sube los resultados/calculados o inclúyelos aquí en forma de tabla/markdown según lo analizado.
     """)
-    # Puedes cargar aquí los resultados finales del modelo, por ejemplo un archivo .csv con métricas.
 
 # 6. Comparación entre generación y demanda
 with tabs[5]:
     st.header("Comparación generación vs. demanda hasta 2030")
     st.markdown("""
-    - Se comparan los valores proyectados de generación y demanda anual.
-    - Graficar ambas series permite visualizar posibles brechas o déficits.  
-    - Conclusión: Es necesario seguir aumentando la capacidad renovable y optimizando la infraestructura.
+    - Agrega una tabla o gráfica de comparación y síntesis de conclusiones.
     """)
-    # Ejemplo de gráfica (necesitas datos de ambos lados):
-    # st.line_chart(df_comparacion) si tienes un dataframe con columnas 'año', 'demanda', 'generacion'
 
 # 7. Fuentes
 with tabs[6]:
     st.header("Fuentes utilizadas")
     st.markdown("""
     - UPME, Atlas Renewable Energy, SITTCA, DNP, Caracol Radio, El Colombiano, SER Colombia, SEI, Climatetracker Latam, Invest in Colombia, entre otras oficiales y especializadas.
-    - Consulta el informe notebook para detalles y citas.
     """)
 
 st.sidebar.title("Navegación")
 st.sidebar.info("Proyecto Ciencia de Datos Energía Colombia")
+
