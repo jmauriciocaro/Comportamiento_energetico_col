@@ -64,14 +64,23 @@ elif selected_section == "Transformaciones":
     st.header("Transformaciones")
 
     st.markdown("""
-    En el notebook de modelos, los datos crudos pasan por las siguientes transformaciones:
-    - Se estandariza la columna de fechas al formato `datetime`.
-    - Se crea una columna `Valor` que representa el valor original.
-    - Se transforma el valor a GWh (por ejemplo, si los datos estaban en MWh, se divide entre 1000).
-    - Se selecciona solo la estructura final deseada: Fecha | Valor | Valor_GWh.
-
-    Ejemplo de estructura final de la tabla:
+    En el notebook de modelos, las transformaciones principales son:
+    - Conversión de la columna de fecha al formato AAAA-MM-DD.
+    - Conversión del valor de energía a GWh si estaba en otra unidad (por ejemplo, MWh → GWh).
+    - La tabla final deseada es: Fecha | Valor (en GWh).
+    
+    Ejemplo de la estructura final de la tabla:
     """)
+
+    # Ejemplo sintético
+    import pandas as pd
+    ejemplo = pd.DataFrame({
+        "Fecha": pd.date_range("2025-01-01", periods=5, freq="D"),
+        "Valor_MWh": [89000, 102500, 95000, 87000, 120000],  # valores originales en MWh
+    })
+    ejemplo["Fecha"] = ejemplo["Fecha"].dt.strftime("%Y-%m-%d")  # Formato AAAA-MM-DD
+    ejemplo["Valor"] = (ejemplo["Valor_MWh"] / 1000).round(2)    # Convertido a GWh, redondeado a 2 decimales
+    st.dataframe(ejemplo[["Fecha", "Valor"]].rename(columns={"Valor": "Valor (GWh)"}))
 
     # Ejemplo sintético de tabla transformada
     import pandas as pd
