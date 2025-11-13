@@ -200,28 +200,26 @@ Fuentes
 
 
 # 6. COMPARACIÓN Y CONCLUSIONES
-import streamlit as st
-from PIL import Image
-
-def seccion_6():
-    st.header("Comparación generación vs demanda y conclusiones")
+t.markdown("<h1>Comparación generación vs demanda y conclusiones</h1>", unsafe_allow_html=True)
     st.write("Abajo se muestra la comparación entre la generación y la demanda eléctrica de Colombia:")
     
-    # Mostrar la gráfica comparativa
-    imagen = Image.open("comparacion.png")
-    st.image(imagen, caption="Comparación generación vs demanda", use_column_width=True)
-    
-    st.markdown("""
-    # Validación de conclusiones
-    - Según la Unidad de Planeación Minero Energética (UPME), la demanda eléctrica en Colombia crecerá en promedio 2,38% anual hasta 2038, lo que pone en tensión la infraestructura existente y podría generar un déficit estructural de energía a partir de 2027 si no se realizan nuevas inversiones en generación.
-    - A la fecha, Colombia debería agregar entre 3.000 y 4.000 MW de capacidad firme anual para satisfacer el crecimiento de la demanda, pero actualmente solo se está alcanzando cerca del 30% de ese objetivo.
-    - El potencial de crecimiento de energías renovables como la solar y eólica es significativo. En los últimos tres años, la capacidad solar en operación comercial ha crecido hasta un 187%, impulsada por políticas nacionales y el Plan Nacional de Desarrollo (PND).
-    - Ya se han adjudicado proyectos por más de 4.500 MW en fuentes no convencionales de energía renovable (FNCER).
-    - La meta oficial del país es duplicar la capacidad instalada en energías renovables para 2030 y alcanzar al menos 6 GW para 2026.
-    - Sin embargo, existen dificultades estructurales, incluyendo retrasos en licenciamiento ambiental, consultas previas, y limitaciones en infraestructura de transmisión, que frenan la entrada de nuevos proyectos, especialmente eólicos y solares.
+    try:
+        imagen = Image.open("comparacion.png")
+        st.image(imagen, caption="Comparación generación vs demanda", use_column_width=True)
+    except Exception:
+        st.warning("No se pudo cargar la gráfica comparacion.png. Verifica que esté en la raíz con app.py.")
 
-    ## Factores de variación del crecimiento de la generación renovable
-    - El crecimiento real de la capacidad instalada en renovables depende de factores como:
+    st.markdown("""
+# Validación de conclusiones
+- Según la Unidad de Planeación Minero Energética (UPME), la demanda eléctrica en Colombia crecerá en promedio 2,38% anual hasta 2038, lo que pone en tensión la infraestructura existente y podría generar un déficit estructural de energía a partir de 2027 si no se realizan nuevas inversiones en generación.
+- A la fecha, Colombia debería agregar entre 3.000 y 4.000 MW de capacidad firme anual para satisfacer el crecimiento de la demanda, pero actualmente solo se está alcanzando cerca del 30% de ese objetivo.
+- El potencial de crecimiento de energías renovables como la solar y eólica es significativo. En los últimos tres años, la capacidad solar en operación comercial ha crecido hasta un 187%, impulsada por políticas nacionales y el Plan Nacional de Desarrollo (PND).
+- Ya se han adjudicado proyectos por más de 4.500 MW en fuentes no convencionales de energía renovable (FNCER).
+- La meta oficial del país es duplicar la capacidad instalada en energías renovables para 2030 y alcanzar al menos 6 GW para 2026.
+- Sin embargo, existen dificultades estructurales, incluyendo retrasos en licenciamiento ambiental, consultas previas, y limitaciones en infraestructura de transmisión, que frenan la entrada de nuevos proyectos, especialmente eólicos y solares.
+
+## Factores de variación del crecimiento de la generación renovable
+- El crecimiento real de la capacidad instalada en renovables depende de factores como:
     - Agilidad regulatoria y administrativa en la aprobación de proyectos.
     - Inversiones en infraestructura de transmisión eléctrica y sistemas de almacenamiento.
     - Adopción masiva de generación distribuida (paneles solares residenciales e industriales).
@@ -229,12 +227,12 @@ def seccion_6():
     - Políticas de incentivo a autogeneración y comunidades energéticas.
     - En contextos de alta penetración renovable, la producción de energía puede no coincidir con los picos de consumo diario, exigiendo una gestión eficiente de los excedentes (baterías, sistemas de almacenamiento).
 
-    ## Informe sobre proyecciones y factores de crecimiento de la generación eléctrica en Colombia (2025)
-            
-    La demanda eléctrica en Colombia aumentará en promedio 2,38% anual en los próximos años, presionando la infraestructura actual y exigiendo inversiones para evitar déficit a partir de 2027. Aunque la capacidad instalada de energía renovable (solar y eólica) está creciendo rápidamente y existen metas de duplicación para 2030, la velocidad real del crecimiento depende de factores regulatorios, de infraestructura y financieros. Los retrasos en licenciamiento ambiental, limitaciones en transmisión eléctrica y la necesidad de facilitar la autogeneración y comunidades energéticas pueden ralentizar la expansión. Si bien Colombia ha avanzado en renovables (más de 4.500 MW adjudicados y el 14% de la matriz ya renovable), mantener la sostenibilidad energética requerirá continuar promoviendo inversiones, evitar cuellos de botella, y fortalecer la gestión de almacenamiento y contratos de largo plazo para mitigar la volatilidad de precios y demanda.
+## Informe sobre proyecciones y factores de crecimiento de la generación eléctrica en Colombia (2025)
+		
+La demanda eléctrica en Colombia aumentará en promedio 2,38% anual en los próximos años, presionando la infraestructura actual y exigiendo inversiones para evitar déficit a partir de 2027. Aunque la capacidad instalada de energía renovable (solar y eólica) está creciendo rápidamente y existen metas de duplicación para 2030, la velocidad real del crecimiento depende de factores regulatorios, de infraestructura y financieros. Los retrasos en licenciamiento ambiental, limitaciones en transmisión eléctrica y la necesidad de facilitar la autogeneración y comunidades energéticas pueden ralentizar la expansión. Si bien Colombia ha avanzado en renovables (más de 4.500 MW adjudicados y el 14% de la matriz ya renovable), mantener la sostenibilidad energética requerirá continuar promoviendo inversiones, evitar cuellos de botella, y fortalecer la gestión de almacenamiento y contratos de largo plazo para mitigar la volatilidad de precios y demanda.
 
-    Por ello, los modelos de proyección de demanda y generación deben considerar las incertidumbres y la variabilidad de crecimiento en energías renovables, sobre todo en la expansión de paneles solares y plantas eólicas, además del ritmo de adopción y factores socioeconómicos.
-    """)
+Por ello, los modelos de proyección de demanda y generación deben considerar las incertidumbres y la variabilidad de crecimiento en energías renovables, sobre todo en la expansión de paneles solares y plantas eólicas, además del ritmo de adopción y factores socioeconómicos.
+""")
 
 # Ejemplo de integración en tu Streamlit principal:
 # if st.sidebar.checkbox("Sección 6: Conclusiones y Validación"):
