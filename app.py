@@ -234,19 +234,15 @@ La demanda eléctrica en Colombia aumentará en promedio 2,38% anual en los pró
 Por ello, los modelos de proyección de demanda y generación deben considerar las incertidumbres y la variabilidad de crecimiento en energías renovables, sobre todo en la expansión de paneles solares y plantas eólicas, además del ritmo de adopción y factores socioeconómicos.
 """)
 
-# Ejemplo de integración en tu Streamlit principal:
-# if st.sidebar.checkbox("Sección 6: Conclusiones y Validación"):
-#     seccion_6()
-
 
 # 7. FUENTES
-elif selected_section == "Fuentes":
+'''elif selected_section == "Fuentes":
     st.header("Fuentes utilizadas")
     st.markdown("""
     UPME, Atlas Renewable Energy, SITTCA, DNP, Caracol Radio, El Colombiano, SER Colombia, SEI, Climatetracker Latam, Invest in Colombia y otras fuentes especializadas.
-    """)
+    """)'''
 
 st.sidebar.markdown("---")
-st.sidebar.info("Desarrollado por [Tu Nombre]")
+st.sidebar.info("Desarrollado por equipo frozado")
 
 
