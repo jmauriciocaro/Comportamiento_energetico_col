@@ -240,11 +240,22 @@ Por ello, los modelos de proyección de demanda y generación deben considerar l
 
 
 # 7. FUENTES
-'''elif selected_section == "Fuentes":
-    st.header("Fuentes utilizadas")
+elif selected_section == "Fuentes":
+    
     st.markdown("""
-    UPME, Atlas Renewable Energy, SITTCA, DNP, Caracol Radio, El Colombiano, SER Colombia, SEI, Climatetracker Latam, Invest in Colombia y otras fuentes especializadas.
-    """)'''
+## Fuentes:
+- UPME (Unidad de Planeación Minero Energética): Proyecciones oficiales de demanda y generación.
+- Atlas Renewable Energy: Perspectivas y tendencias del sector energético colombiano.
+- El Colombiano: Entrevista y análisis sobre el crecimiento y déficit del sector eléctrico.
+- Caracol Radio: Informe sobre déficit energético proyectado para 2027.
+- SITTCA (Sistema de Información Técnica y Comercial de Colombia): Análisis de impulso renovable y cifras recientes.
+- DNP (Departamento Nacional de Planeación): Reportes y proyecciones de energía renovable.
+- El Universal: Artículo sobre riesgos de desabastecimiento energético para 2026.
+- SER Colombia: Documento oficial sobre expansión de fuentes no convencionales de energía renovable (FNCER).
+- Invest in Colombia: Datos sobre adjudicación y crecimiento en proyectos renovables.
+- SEI (Stockholm Environment Institute): Estudios sobre energía solar, eólica y comunidades energéticas en Colombia.
+- Climatetracker Latinoamérica: Análisis de los desafíos y oportunidades de las renovables frente al desabastecimiento'''
+
 
 st.sidebar.markdown("---")
 st.sidebar.info("Desarrollado por equipo frozado")
