@@ -203,13 +203,13 @@ Fuentes
 st.markdown("<h1>Comparación generación vs demanda y conclusiones</h1>", unsafe_allow_html=True)
 st.write("Abajo se muestra la comparación entre la generación y la demanda eléctrica de Colombia:")
     
-	try:
-        imagen = Image.open("comparacion.png")
-        st.image(imagen, caption="Comparación generación vs demanda", use_column_width=True)
-    except Exception:
-        st.warning("No se pudo cargar la gráfica comparacion.png. Verifica que esté en la raíz con app.py.")
+try:
+    imagen = Image.open("comparacion.png")
+    st.image(imagen, caption="Comparación generación vs demanda", use_column_width=True)
+except Exception:
+    st.warning("No se pudo cargar la gráfica comparacion.png. Verifica que esté en la raíz con app.py.")
 
-    st.markdown("""
+st.markdown("""
 # Validación de conclusiones
 - Según la Unidad de Planeación Minero Energética (UPME), la demanda eléctrica en Colombia crecerá en promedio 2,38% anual hasta 2038, lo que pone en tensión la infraestructura existente y podría generar un déficit estructural de energía a partir de 2027 si no se realizan nuevas inversiones en generación.
 - A la fecha, Colombia debería agregar entre 3.000 y 4.000 MW de capacidad firme anual para satisfacer el crecimiento de la demanda, pero actualmente solo se está alcanzando cerca del 30% de ese objetivo.
@@ -220,12 +220,12 @@ st.write("Abajo se muestra la comparación entre la generación y la demanda el�
 
 ## Factores de variación del crecimiento de la generación renovable
 - El crecimiento real de la capacidad instalada en renovables depende de factores como:
-    - Agilidad regulatoria y administrativa en la aprobación de proyectos.
-    - Inversiones en infraestructura de transmisión eléctrica y sistemas de almacenamiento.
-    - Adopción masiva de generación distribuida (paneles solares residenciales e industriales).
-    - Estabilidad y atractivo de los esquemas de contratos de compra de energía (PPA).
-    - Políticas de incentivo a autogeneración y comunidades energéticas.
-    - En contextos de alta penetración renovable, la producción de energía puede no coincidir con los picos de consumo diario, exigiendo una gestión eficiente de los excedentes (baterías, sistemas de almacenamiento).
+- Agilidad regulatoria y administrativa en la aprobación de proyectos.
+- Inversiones en infraestructura de transmisión eléctrica y sistemas de almacenamiento.
+- Adopción masiva de generación distribuida (paneles solares residenciales e industriales).
+- Estabilidad y atractivo de los esquemas de contratos de compra de energía (PPA).
+- Políticas de incentivo a autogeneración y comunidades energéticas.
+- En contextos de alta penetración renovable, la producción de energía puede no coincidir con los picos de consumo diario, exigiendo una gestión eficiente de los excedentes (baterías, sistemas de almacenamiento).
 
 ## Informe sobre proyecciones y factores de crecimiento de la generación eléctrica en Colombia (2025)
 		
