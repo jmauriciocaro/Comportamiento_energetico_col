@@ -152,8 +152,52 @@ elif selected_section == "Modelo de demanda/generación":
 
 # 5. CALIFICACIÓN DE MODELOS
 elif selected_section == "Calificación de modelos":
-    st.header("Calificación de los modelos")
-    st.info("Aquí se mostrarán las métricas de calidad de los modelos.")
+    st.markdown("""
+## Calificación de los modelos creados
+
+Los dos modelos creados —demanda y generación energética con Prophet— pueden calificarse de la siguiente manera para uso analítico:
+
+***
+
+### Modelo de demanda energética
+
+**Calificación:**  
+- **Adecuado para análisis exploratorio, monitoreo tendencial y escenarios base.**
+- **Efectividad:**  
+  - Tras la limpieza de outliers extremos, el modelo muestra un desempeño aceptable, con un R² positivo (>0.21), bajos errores relativos (MAPE y SMAPE <8%) y errores absolutos (MAE y RMSE) razonables.
+  - Es útil para proyecciones, validaciones de hipótesis y planificación, pero se recomienda complementar con variables exógenas o métodos más avanzados si se requiere alto nivel de confiabilidad o segmentación detallada[1][2].
+- **Limitaciones:**  
+  - La historia disponible es corta, así que los patrones de largo plazo pueden estar subrepresentados.
+  - Los eventos fortuitos o cambios bruscos futuros pueden no estar del todo anticipados.
+
+***
+
+### Modelo de generación energética
+
+**Calificación:**  
+- **Muy robusto y altamente recomendado para análisis predictivo y comparativo.**
+- **Efectividad:**  
+  - El modelo retiene un R² cruzado muy alto (~0.77), una baja dispersión de errores y excelente ajuste visual en la comparación real vs. predicho.
+  - Es confiable para reportes de largo plazo, benchmarking y decisiones de política energética.
+- **Limitaciones:**  
+  - Como todos los modelos Prophet, depende de que el futuro se comporte similar al pasado (sin eventos exógenos o rupturas drásticas). Si se prevén cambios estructurales (nuevas fuentes o apagones sistémicos), conviene agregar regresores o capas de modelado.
+
+***
+
+## Resumen de calificación
+
+| Variable      | Uso Analítico            | Robustez | Nivel recomendación |
+|---------------|-------------------------|----------|---------------------|
+| Demanda       | Exploración, tendencia   | Aceptable| Bueno               |
+| Generación    | Predicción y análisis    | Alto     | Muy Bueno           |
+
+Ambos modelos son útiles para análisis y toma de decisiones, pero el de generación ofrece resultados más robustos y estables; el de demanda es satisfactorio para escenarios base y monitoreo operativo tras la mejora en calidad de datos[1][2].
+
+Fuentes  
+[1] prophet: Automatic Forecasting Procedure https://community.r-multiverse.org/prophet/prophet.pdf  
+[2] Time Series Forecasting using Facebook Prophet https://www.nileshdalvi.com/blog/time-series-prophet/
+    """)
+
 
 # 6. COMPARACIÓN Y CONCLUSIONES
 elif selected_section == "Comparación y conclusiones":
